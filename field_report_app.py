@@ -6,14 +6,9 @@ from datetime import datetime
 import tempfile
 import os
 
-st.set_page_config(
-    page_title="Field Scientist Report App",
-    layout="centered"
-)
+st.set_page_config(page_title="Field Scientist Report App",layout="centered")
 
 st.title("Field Scientist Report App")
-st.write("Document and report a discovery in a structured way.")
-
 st.header("1. Researcher Information")
 
 researcher_name = st.text_input("Researcher name")
@@ -22,10 +17,7 @@ notes = st.text_area("Description / notes")
 
 st.header("2. GPS Location")
 
-location_data = gps_location_button(
-    buttonText="Get my location",
-    key="gps"
-)
+location_data = gps_location_button(buttonText="Get my location",key="gps")
 
 latitude = None
 longitude = None
@@ -39,25 +31,19 @@ if location_data:
 
     if latitude is not None and longitude is not None:
         st.success("Location captured successfully!")
-
-        st.map({
-            "lat": [latitude],
-            "lon": [longitude]
-        })
+        st.map({"lat": [latitude],"lon": [longitude]})
     else:
         st.warning("Location not captured yet. Please allow location access.")
 else:
     st.info("Click the button to capture your location.")
 
 st.header("3. Visual Evidence")
-
 photo = st.camera_input("Take a photo as evidence")
 
 if photo is not None:
     st.image(photo, caption="Evidence photo", use_container_width=True)
 
 st.header("4. Generate PDF Report")
-
 
 def create_pdf(name, title, description, lat, lon, photo_file):
     pdf = FPDF()
@@ -117,14 +103,7 @@ if st.button("Generate PDF Report"):
     elif photo is None:
         st.error("Please take a photo as evidence.")
     else:
-        pdf_path = create_pdf(
-            researcher_name,
-            discovery_title,
-            notes,
-            latitude,
-            longitude,
-            photo
-        )
+        pdf_path = create_pdf(researcher_name, discovery_title, notes, latitude, longitude, photo)
 
         with open(pdf_path, "rb") as pdf_file:
             st.download_button(
@@ -133,5 +112,4 @@ if st.button("Generate PDF Report"):
                 file_name="field_report.pdf",
                 mime="application/pdf"
             )
-
         st.success("PDF report generated successfully!")
